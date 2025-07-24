@@ -113,6 +113,50 @@ def extract_url_features(url):
         features['nb_www'] = 1 if 'www' in domain else 0
         features['nb_com'] = 1 if '.com' in domain else 0
         features['nb_dslash'] = url.count('//')
+        
+        # HTTP/HTTPS features
+        features['http_in_path'] = 1 if 'http' in path else 0
+        features['https_token'] = 1 if 'https' in url.lower() and parsed_url.scheme != 'https' else 0
+        
+        # Ratio features
+        features['ratio_digits_url'] = sum(c.isdigit() for c in url) / len(url) if len(url) > 0 else 0
+        features['ratio_digits_host'] = sum(c.isdigit() for c in domain) / len(domain) if len(domain) > 0 else 0
+        
+        # Punycode and port
+        features['punycode'] = 1 if 'xn--' in domain else 0
+        features['port'] = 1 if ':' in domain and domain.split(':')[-1].isdigit() else 0
+        
+        # TLD features
+        tld = domain.split('.')[-1] if '.' in domain else ''
+        features['tld_in_path'] = 1 if tld in path else 0
+        features['tld_in_subdomain'] = 1 if domain.count('.') > 1 and tld in domain[:-len(tld)-1] else 0
+        features['abnormal_subdomain'] = 1 if domain.count('.') > 3 else 0
+        
+        # Domain structure
+        features['nb_subdomains'] = max(0, domain.count('.') - 1)
+        features['prefix_suffix'] = 1 if '-' in domain else 0
+        features['random_domain'] = 1 if re.search(r'[0-9]+[a-z]+[0-9]+', domain) else 0
+        features['shortening_service'] = 1 if any(short in domain for short in ['bit.ly', 'tinyurl', 'goo.gl', 't.co', 'short.link']) else 0
+        features['path_extension'] = 1 if re.search(r'\.(exe|zip|rar|bat|scr)$', path) else 0
+        
+        # Redirection features (simplified)
+        features['nb_redirection'] = 0  # Would need actual HTTP request
+        features['nb_external_redirection'] = 0
+        
+        # Text analysis features (simplified)
+        words_raw = re.findall(r'[a-zA-Z]+', url)
+        features['length_words_raw'] = sum(len(word) for word in words_raw)
+        features['char_repeat'] = max([len(list(g)) for k, g in _import_('itertools').groupby(url)], default=1)
+        features['shortest_words_raw'] = min([len(word) for word in words_raw], default=0)
+        features['shortest_word_host'] = min([len(word) for word in re.findall(r'[a-zA-Z]+', domain)], default=0)
+        features['shortest_word_path'] = min([len(word) for word in re.findall(r'[a-zA-Z]+', path)], default=0)
+        features['longest_words_raw'] = max([len(word) for word in words_raw], default=0)
+        features['longest_word_host'] = max([len(word) for word in re.findall(r'[a-zA-Z]+', domain)], default=0)
+        features['longest_word_path'] = max([len(word) for word in re.findall(r'[a-zA-Z]+', path)], default=0)
+        features['avg_words_raw'] = features['length_words_raw'] / len(words_raw) if words_raw else 0
+        features['avg_word_host'] = sum(len(word) for word in re.findall(r'[a-zA-Z]+', domain)) / max(1, len(re.findall(r'[a-zA-Z]+', domain)))
+        features['avg_word_path'] = sum(len(word) for word in re.findall(r'[a-zA-Z]+', path)) / max(1, len(re.findall(r'[a-zA-Z]+', path)))
+
 
         
 def main():
