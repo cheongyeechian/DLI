@@ -79,6 +79,42 @@ def train_model():
     
     return model, scaler
 
+def extract_url_features(url):
+    """Extract features from URL to match the dataset format exactly"""
+    features = {}
+    
+    try:
+        parsed_url = urlparse(url)
+        domain = parsed_url.netloc
+        path = parsed_url.path
+        query = parsed_url.query
+        
+        # Basic URL character counting features
+        features['length_url'] = len(url)
+        features['length_hostname'] = len(domain)
+        features['ip'] = 1 if re.match(r'^\d+\.\d+\.\d+\.\d+', domain) else 0
+        features['nb_dots'] = url.count('.')
+        features['nb_hyphens'] = url.count('-')
+        features['nb_at'] = url.count('@')
+        features['nb_qm'] = url.count('?')
+        features['nb_and'] = url.count('&')
+        features['nb_or'] = url.count('|')
+        features['nb_eq'] = url.count('=')
+        features['nb_underscore'] = url.count('_')
+        features['nb_tilde'] = url.count('~')
+        features['nb_percent'] = url.count('%')
+        features['nb_slash'] = url.count('/')
+        features['nb_star'] = url.count('*')
+        features['nb_colon'] = url.count(':')
+        features['nb_comma'] = url.count(',')
+        features['nb_semicolumn'] = url.count(';')
+        features['nb_dollar'] = url.count('$')
+        features['nb_space'] = url.count(' ')
+        features['nb_www'] = 1 if 'www' in domain else 0
+        features['nb_com'] = 1 if '.com' in domain else 0
+        features['nb_dslash'] = url.count('//')
+
+        
 def main():
     st.title("🔒 Phishing Website Detector")
     st.markdown("Enter a website URL to check if it's potentially a phishing site using machine learning.")
