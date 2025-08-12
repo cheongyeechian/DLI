@@ -117,7 +117,7 @@ param_dist = {'C': loguniform(1e-3, 1e3)}
 # Using the data with polynomial features
 # n_iter controls how many parameter combinations are sampled
 random_search = RandomizedSearchCV(
-    LogisticRegression(random_state=42, penalty='l2'),
+    LogisticRegression(random_state=42, penalty='l2', solver='lbfgs', max_iter=1000),
     param_distributions=param_dist,
     n_iter=10,  # Number of parameter settings that are sampled. Adjust as needed.
     scoring='accuracy',
@@ -147,15 +147,15 @@ recall_lr = recall_score(y_test, y_pred_lr)
 f1_lr = f1_score(y_test, y_pred_lr)
 conf_matrix_lr = confusion_matrix(y_test, y_pred_lr)
 
-print(f"\nAccuracy (Logistic Regression): {accuracy_lr:.4f}")
-print(f"Precision (Logistic Regression): {precision_lr:.4f}")
-print(f"Recall (Logistic Regression): {recall_lr:.4f}")
-print(f"F1-Score (Logistic Regression): {f1_lr:.4f}")
+print(f"\nAccuracy (Logistic Regression with enhancements): {accuracy_lr:.4f}")
+print(f"Precision (Logistic Regression with enhancements): {precision_lr:.4f}")
+print(f"Recall (Logistic Regression with enhancements): {recall_lr:.4f}")
+print(f"F1-Score (Logistic Regression with enhancements): {f1_lr:.4f}")
 
-print("\nConfusion Matrix (Logistic Regression):")
+print("\nConfusion Matrix (Logistic Regression with enhancements):")
 print(conf_matrix_lr)
 
-print("\n--- Confusion Matrix Breakdown (Logistic Regression) ---")
+print("\n--- Confusion Matrix Breakdown (Logistic Regression with enhancements) ---")
 TN_lr, FP_lr, FN_lr, TP_lr = conf_matrix_lr.ravel()
 print(f"True Negatives (Legitimate Correctly Classified): {TN_lr}")
 print(f"False Positives (Legitimate Classified as Phishing): {FP_lr}")
