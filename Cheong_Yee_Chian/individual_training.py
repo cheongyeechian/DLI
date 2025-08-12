@@ -117,7 +117,7 @@ param_dist = {'C': loguniform(1e-3, 1e3)}
 # Using the data with polynomial features
 # n_iter controls how many parameter combinations are sampled
 random_search = RandomizedSearchCV(
-    LogisticRegression(random_state=42, penalty='l2', solver='lbfgs', max_iter=1000),
+    LogisticRegression(random_state=42, penalty='l2', solver='lbfgs', max_iter=2000),
     param_distributions=param_dist,
     n_iter=10,  # Number of parameter settings that are sampled. Adjust as needed.
     scoring='accuracy',
