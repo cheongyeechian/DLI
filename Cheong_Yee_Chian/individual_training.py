@@ -129,8 +129,6 @@ random_search.fit(X_train_poly, y_train)
 best_C = random_search.best_params_['C']
 print(f"Best C found by RandomizedSearchCV: {best_C}")
 
-# Define the Logistic Regression model with the best C found
-model_lr = LogisticRegression(random_state=42, C=best_C, penalty='l2', solver='lbfgs', max_iter=2000)
 
 # Train the model on the data with polynomial features
 print("\nTraining Logistic Regression Model with best C and polynomial features...")
